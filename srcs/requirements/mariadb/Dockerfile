@@ -11,7 +11,7 @@ RUN     apt install -y vim
 
 COPY    ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY    ./scripts/mariadb.sh /usr/local/bin/
+COPY    ./tools/mariadb.sh /usr/local/bin/
 
 RUN     chmod +x /usr/local/bin/mariadb.sh
 

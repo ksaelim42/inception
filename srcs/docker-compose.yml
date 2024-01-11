@@ -2,14 +2,14 @@ version: '3'
 services:
   wordpress:
     container_name: wordpress
-    image: wp-img
+    image: wordpress
     build:
-      context: src/wordpress
+      context: requirements/wordpress
       dockerfile: Dockerfile
     depends_on:
       - mariadb
     networks:
-      - network01
+      - network
     env_file:
       - .env
     volumes:
@@ -17,27 +17,27 @@ services:
     restart: always
   nginx:
     container_name: nginx
-    image: nginx-img
+    image: nginx
     build:
-      context: src/nginx
+      context: requirements/nginx
       dockerfile: Dockerfile
     ports:
       - 443:443
     depends_on:
       - wordpress
     networks:
-      - network01
+      - network
     volumes:
       - wordpress:/var/www/html
     restart: always
   mariadb:
     container_name: mariadb
-    image: mariadb-img
+    image: mariadb
     build:
-      context: src/mariadb
+      context: requirements/mariadb
       dockerfile: Dockerfile
     networks:
-      - network01
+      - network
     env_file:
       - .env
     volumes:
@@ -59,6 +59,6 @@ volumes:
       device: /home/ksaelim/data/mariadb
 
 networks:
-  network01:
+  network:
     name: inception-network
     driver: bridge

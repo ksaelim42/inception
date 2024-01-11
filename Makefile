@@ -1,25 +1,32 @@
-all: up
+VOLUME_DIR = /home/ksaelim/data
+
+all: create up
+
+create:
+	sudo mkdir -p ${VOLUME_DIR}/wordpress
+	sudo mkdir -p ${VOLUME_DIR}/mariadb
 
 up:
-	@docker compose -f docker-compose.yml up -d --build
+	docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env up -d --build
 
 down:
-	@docker compose -f docker-compose.yml down
+	docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env down
 
-# clean: down
-# 	@if [ -z $$(docker image ls -qa) ]; then \
-# 		echo "No images found."; \
-# 	else \
-# 		docker image rm -f $$(docker images -qa); \
-# 	fi
+start:
+	docker compose -f ./srcs/docker-compose.yml start
 
-# 	@if [ -z ]
+stop:
+	docker compose -f ./srcs/docker-compose.yml stop
+
+re: down up
+
 clean:
-	docker compose down --rmi all --volumes
+	docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env down --rmi all --volumes
 
-fclean: clean
-	docker system prune -af
+fclean:
+	docker stop $$(docker ps -qa) 
+	docker system prune --all --force
+	docker network prune --force
+	docker volume prune --force
 
-re: fclean up
-
-.PHONY: all up down clean fclean re
+.PHONY : all create up down start stop re clean fclean
